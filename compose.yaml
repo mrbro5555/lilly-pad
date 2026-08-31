@@ -11,7 +11,8 @@ services:
       - ./data:/data
     ports:
       - 8096:8096
-    # network_mode: "host"
+    labels:
+      - tsdproxy.enable=true
     restart: unless-stopped
 
   #   firefox:
@@ -85,6 +86,8 @@ services:
       - 5055:5055
     volumes:
       - ./configs/mediarr/jellyseerr:/app/config
+    labels:
+      - tsdproxy.enable=true
     restart: unless-stopped
     depends_on:
       #   - sonarr
@@ -196,6 +199,20 @@ services:
       - WIREGUARD_PRIVATE_KEY=${VPN_PRIVATE_KEY}
       - WIREGUARD_ADDRESSES=${VPN_ADDRESSES}
       - SERVER_COUNTRIES=Switzerland
+
+  tsdproxy:
+    image: almeidapaulopt/tsdproxy:2
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./configs/tsdproxy/data:/data
+      - ./configs/tsdproxy/config:/config
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+    ports:
+      - "8888:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
 
 # networks:
 #   mediarr:
