@@ -172,15 +172,20 @@ services:
       - PGID=1000
       - TZ=TIME_ZONE
       - WEBUI_PORT=8080
+      - TORRENTING_PORT=${VPN_PORT}
     volumes:
       - ./configs/mediarr/qbittorrent:/config
       - ./data:/data
     restart: unless-stopped
+    depends_on:
+      gluetun:
+        condition: service_healthy
+        restart: true
 
   gluetun:
     image: qmcgaw/gluetun
     container_name: gluetun
-    restart: always
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
     devices:
@@ -192,13 +197,17 @@ services:
       - 8080:8080 # QBittorrent Web UI
     volumes:
       - ./configs/gluetun:/gluetun
-      - ./configs/gluetun/wireguard/wireguard.conf:/gluetun/wireguard/wg0.conf
+      # - ./configs/gluetun/wireguard/wireguard.conf:/gluetun/wireguard/wg0.conf
     environment:
-      - VPN_SERVICE_PROVIDER=mullvad
+      - VPN_SERVICE_PROVIDER=airvpn
       - VPN_TYPE=wireguard
+      - WIREGUARD_PUBLIC_KEY=${VPN_PUBLIC_KEY}
       - WIREGUARD_PRIVATE_KEY=${VPN_PRIVATE_KEY}
+      - WIREGUARD_PRESHARED_KEY=${VPN_PRESHARED_KEY}
       - WIREGUARD_ADDRESSES=${VPN_ADDRESSES}
       - SERVER_COUNTRIES=Switzerland
+      - FIREWALL_VPN_INPUT_PORTS=${VPN_PORT}
+      - TZ=${TIME_ZONE}
 
   tsdproxy:
     image: almeidapaulopt/tsdproxy:2
