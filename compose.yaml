@@ -15,66 +15,6 @@ services:
       - tsdproxy.enable=true
     restart: unless-stopped
 
-  #   firefox:
-  #     image: lscr.io/linuxserver/firefox:latest
-  #     container_name: firefox
-  #     security_opt:
-  #       - seccomp:unconfined
-  #     environment:
-  #       - PUID=1000
-  #       - PGID=1000
-  #       - TZ=TIME_ZONE
-  #       - DRINODE=/dev/dri/renderD128
-  #       - DISABLE_IPV6=true
-  #       - DOCKER_MODS=linuxserver/mods:firefox-fonts
-  #     volumes: - ./configs/firefox:/config
-  #     ports:
-  #       - 3001:3001
-  #     networks:
-  #       - firefox
-  #     shm_size: "1gb"
-  #     devices:
-  #       - /dev/dri/renderD128:/dev/dri/renderD128
-  #     group_add:
-  #       - "109"
-  #     restart: unless-stopped
-  #   duplicati:
-  #     image: lscr.io/linuxserver/duplicati:latest
-  #     container_name: duplicati
-  #     environment:
-  #       - PUID=1000
-  #       - PGID=1000
-  #       - TZ=TIME_ZONE
-  #     volumes:
-  #       - ./configs/duplicati/config:/config
-  #       - ./configs:/source
-  #       - ./docker-compose.yml:/source/docker-compose.yml
-  #       - ./configs/duplicati/restore:/restore
-  #     networks:
-  #       - duplicati
-  #     ports:
-  #       - 8200:8200
-  #     restart: unless-stopped
-  #   bazarr:
-  #     image: lscr.io/linuxserver/bazarr:latest
-  #     container_name: bazarr
-  #     hostname: bazarr
-  #     networks:
-  #       - mediarr
-  #     environment:
-  #       - PUID=1000
-  #       - PGID=1000
-  #       - TZ=TIME_ZONE
-  #     volumes:
-  #       - ./configs/mediarr/bazarr:/config
-  #       - myMedia:/mnt/media
-  #     ports:
-  #       - 6767:6767
-  #     restart: unless-stopped
-  #     depends_on:
-  #       - sonarr
-  #       - radarr
-
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr
@@ -90,15 +30,12 @@ services:
       - tsdproxy.enable=true
     restart: unless-stopped
     depends_on:
-      #   - sonarr
+      - sonarr
       - radarr
 
   prowlarr:
     image: linuxserver/prowlarr:latest
     container_name: prowlarr
-    # network_mode: service:gluetun
-    # networks:
-    #   - mediarr
     environment:
       - puid=1000
       - pgid=1000
@@ -108,15 +45,12 @@ services:
     ports:
       - 9696:9696
     restart: unless-stopped
-    # depends_on:
-    #   - flaresolverr
+    depends_on:
+      - flaresolverr
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
-    # network_mode: service:gluetun
-    # networks:
-    #   - mediarr
     environment:
       - PUID=1000
       - PGID=1000
@@ -129,15 +63,12 @@ services:
     restart: unless-stopped
     depends_on:
       - prowlarr
-      # - qbittorrent
+      - qbittorrent
       - jellyfin
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
-    # network_mode: service:gluetun
-    # networks:
-    #   - mediarr
     environment:
       - PUID=1000
       - PGID=1000
@@ -145,10 +76,9 @@ services:
     volumes:
       - ./configs/mediarr/sonarr:/config
       - ./data:/data
-      # - myDlFolders:/mnt/downloads
     depends_on:
       - prowlarr
-      # - qbittorrent
+      - qbittorrent
       - jellyfin
     ports:
       - 8989:8989
@@ -197,7 +127,6 @@ services:
       - 8080:8080 # QBittorrent Web UI
     volumes:
       - ./configs/gluetun:/gluetun
-      # - ./configs/gluetun/wireguard/wireguard.conf:/gluetun/wireguard/wg0.conf
     environment:
       - VPN_SERVICE_PROVIDER=airvpn
       - VPN_TYPE=wireguard
@@ -222,21 +151,3 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
-
-# networks:
-#   mediarr:
-#     driver: bridge
-
-# volumes:
-#   myMedia:
-#     driver: local
-#     driver_opts:
-#       type: none
-#       o: bind
-#       device: /mnt/media
-#   myDlFolders:
-#     driver: local
-#     driver_opts:
-#       type: none
-#       o: bind
-#       device: /mnt/HDD/downloads
