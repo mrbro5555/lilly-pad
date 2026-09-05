@@ -151,3 +151,20 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
+
+  autobrr:
+    container_name: autobrr
+    image: ghcr.io/autobrr/autobrr:latest
+    restart: unless-stopped
+    #logging:
+    #  driver: json-file
+    #  options:
+    #    max-file: ${DOCKERLOGGING_MAXFILE}
+    #    max-size: ${DOCKERLOGGING_MAXSIZE}
+    user: 1000:1000
+    environment:
+      - TZ=${TIME_ZONE}
+    volumes:
+      - ./configs/mediarr/autobrr:/config
+    ports:
+      - 7474:7474
