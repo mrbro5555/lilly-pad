@@ -93,7 +93,7 @@ services:
       - TZ=TIME_ZONE
     restart: unless-stopped
 
-  qbittorrentvpn:
+  qbittorrent:
     image: binhex/arch-qbittorrentvpn:latest
     container_name: qbittorrent
     restart: unless-stopped
