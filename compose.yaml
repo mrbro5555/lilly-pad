@@ -8,7 +8,7 @@ services:
       - TZ=Europe/Paris
     volumes:
       - ./configs/mediarr/jellyfin:/config
-      - ./data:/data
+      - ${DATA_DIR}:/data
     ports:
       - 8096:8096
     labels:
@@ -57,7 +57,7 @@ services:
       - TZ=TIME_ZONE
     volumes:
       - ./configs/mediarr/radarr:/config
-      - ./data:/data
+      - ${DATA_DIR}:/data
     ports:
       - 7878:7878
     restart: unless-stopped
@@ -75,7 +75,7 @@ services:
       - TZ=TIME_ZONE
     volumes:
       - ./configs/mediarr/sonarr:/config
-      - ./data:/data
+      - ${DATA_DIR}:/data
     depends_on:
       - prowlarr
       - qbittorrent
@@ -107,7 +107,7 @@ services:
       # - "58946:58946"
       # - "58946:58946/udp"
     volumes:
-      - ./data:/data
+      - ${DATA_DIR}:/data
       - ./configs/qbittorrent:/config
       # - /etc/localtime:/etc/localtime:ro
     environment:
