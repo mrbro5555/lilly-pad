@@ -165,3 +165,21 @@ services:
       - ./configs/mediarr/autobrr:/config
     ports:
       - 7474:7474
+
+  filebot-watcher:
+    container_name: filebot-watcher
+    image: rednoah/filebot:watcher
+    restart: unless-stopped
+    volumes:
+      - ./configs/mediarr/filebot-watcher:/data
+      - ${DATA_DIR}/downloads/complete:/volume1/input
+      - ${DATA_DIR}/media:/volume1/output
+    command: >
+      /volume1/input
+      --output /volume1/output
+      --action hardlink
+      -non-strict
+      --def movieFormat="movies/{ny}/{ny}"
+      --def seriesFormat="shows/{n}/Season {s.pad(2)}/{s00e00} - {t}"
+      --def animeFormat="shows/{n}/{s00e00} - {t}"
+      --def exec="echo 'Processed {f}'"
