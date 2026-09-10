@@ -111,6 +111,7 @@ services:
       - ./configs/qbittorrent:/config
       # - /etc/localtime:/etc/localtime:ro
     environment:
+      - TZ=${TIME_ZONE}
       - VPN_ENABLED=yes
       - VPN_PROV=airvpn
       - VPN_CLIENT=wireguard
@@ -172,11 +173,10 @@ services:
     restart: unless-stopped
     volumes:
       - ./configs/mediarr/filebot-watcher:/data
-      - ${DATA_DIR}/downloads/complete:/volume1/input
-      - ${DATA_DIR}/media:/volume1/output
+      - ${DATA_DIR}:/storage
     command: >
-      /volume1/input
-      --output /volume1/output
+      /storage/downloads/complete
+      --output /storage/media
       --action hardlink
       -non-strict
       --def movieFormat="movies/{ny}/{ny}"
