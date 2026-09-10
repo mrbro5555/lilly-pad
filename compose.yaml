@@ -3,8 +3,8 @@ services:
     container_name: jellyfin
     image: lscr.io/linuxserver/jellyfin:latest
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PUID}
       - TZ=Europe/Paris
     volumes:
       - ./configs/mediarr/jellyfin:/config
@@ -19,7 +19,7 @@ services:
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr
     hostname: jellyseerr
-    user: 1000:1000
+    user: ${PUID}:${PUID}
     environment:
       - TZ=TIME_ZONE
     ports:
@@ -37,8 +37,8 @@ services:
     image: linuxserver/prowlarr:latest
     container_name: prowlarr
     environment:
-      - puid=1000
-      - pgid=1000
+      - puid=${PUID}
+      - pgid=${PUID}
       - tz=africa/casablanca
     volumes:
       - ./configs/mediarr/prowlarr:/config
@@ -52,8 +52,8 @@ services:
     image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PUID}
       - TZ=TIME_ZONE
     volumes:
       - ./configs/mediarr/radarr:/config
@@ -70,8 +70,8 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PUID}
       - TZ=TIME_ZONE
     volumes:
       - ./configs/mediarr/sonarr:/config
@@ -133,8 +133,8 @@ services:
       # - HEALTHCHECK_ACTION=<action>
       # - HEALTHCHECK_HOSTNAME=<hostname>
       # - UMASK=<umask for created files>
-      - PUID=1000
-      - PGID=1000
+      - PUID=${PUID}
+      - PGID=${PUID}
 
   tsdproxy:
     image: almeidapaulopt/tsdproxy:2
@@ -159,7 +159,7 @@ services:
     #  options:
     #    max-file: ${DOCKERLOGGING_MAXFILE}
     #    max-size: ${DOCKERLOGGING_MAXSIZE}
-    user: 1000:1000
+    user: ${PUID}:${PUID}
     environment:
       - TZ=${TIME_ZONE}
     volumes:
