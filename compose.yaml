@@ -19,8 +19,9 @@ services:
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr
     hostname: jellyseerr
-    user: ${PUID}:${PUID}
     environment:
+      - PUID=${PUID}
+      - PGID=${PUID}
       - TZ=TIME_ZONE
     ports:
       - 5055:5055
@@ -89,6 +90,8 @@ services:
     container_name: flaresolverr
     hostname: flaresolverr
     environment:
+      - PUID=${PUID}
+      - PGID=${PUID}
       - LOG_LEVEL=info
       - TZ=TIME_ZONE
     restart: unless-stopped
@@ -143,6 +146,8 @@ services:
       - ./configs/tsdproxy/data:/data
       - ./configs/tsdproxy/config:/config
     environment:
+      - PUID=${PUID}
+      - PGID=${PUID}
       - TS_AUTHKEY=${TS_AUTHKEY}
     ports:
       - "8888:8080"
@@ -159,8 +164,9 @@ services:
     #  options:
     #    max-file: ${DOCKERLOGGING_MAXFILE}
     #    max-size: ${DOCKERLOGGING_MAXSIZE}
-    user: ${PUID}:${PUID}
     environment:
+      - PUID=${PUID}
+      - PGID=${PUID}
       - TZ=${TIME_ZONE}
     volumes:
       - ./configs/mediarr/autobrr:/config
@@ -171,6 +177,9 @@ services:
     container_name: filebot-watcher
     image: rednoah/filebot:watcher
     restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PUID}
     volumes:
       - ./configs/mediarr/filebot-watcher:/data
       - ${DATA_DIR}:/storage
